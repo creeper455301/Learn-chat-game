@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bean AI: Knows Everything</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        #chat-box {
+            width: 80%;
+            max-width: 600px;
+            margin: 20px auto;
+            border: 2px solid #007BFF;
+            border-radius: 10px;
+            background: #ffffff;
+            overflow-y: auto;
+            height: 400px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        #chat-box p {
+            margin: 10px 0;
+        }
+        .user {
+            text-align: right;
+            color: blue;
+        }
+        .ai {
+            text-align: left;
+            color: green;
+        }
+        #user-input {
+            width: calc(100% - 110px);
+            max-width: 500px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        #send-button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #send-button:hover {
+            background-color: #0056b3;
+        }
+        #home-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            display: inline-block;
+        }
+        #home-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bean AI: Knows Everything</h1>
+    <p>I am Bean AI, your guide to all knowledge on Earth... and beans, of course. Ask me anything!</p>
+    <div id="chat-box"></div>
+    <input type="text" id="user-input" placeholder="Type your question here...">
+    <button id="send-button">Ask</button>
+    <br>
+    <a href="Beanstart.html" id="home-button">Home</a>
+
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+
+        const earthKnowledge = {
+            "geography": "Geography is the study of Earth's physical features, such as mountains, rivers, and continents. Did you know that Mount Everest is the highest peak on Earth, standing at 8,848 meters?",
+            "oceans": "Earth has five main oceans: the Pacific, Atlantic, Indian, Southern, and Arctic. The Pacific is the largest, covering more than 63 million square miles.",
+            "biology": "Biology is the study of life on Earth. From tiny microbes to the massive blue whale, Earth is home to millions of species, including humans.",
+            "physics": "Physics explains the fundamental principles of the universe, such as gravity, energy, and motion. Isaac Newton and Albert Einstein made groundbreaking contributions to this field.",
+            "history": "Human history is rich and diverse, spanning millions of years. Civilizations like Ancient Egypt, the Roman Empire, and the Mayan Empire shaped our world.",
+            "climate": "Earth's climate is influenced by many factors, including its atmosphere, oceans, and human activities. Climate change is one of the biggest challenges of our time.",
+            "technology": "Technology has advanced dramatically, from the invention of the wheel to artificial intelligence. Did you know smartphones have more computing power than the Apollo 11 spacecraft?",
+            "beans": "Beans are magical legumes packed with protein, fiber, and deliciousness. They have been cultivated for over 7,000 years and come in many varieties like black beans, kidney beans, and pinto beans.",
+            "continents": "Earth has seven continents: Africa, Antarctica, Asia, Europe, North America, Oceania, and South America. Asia is the largest, and Africa is the second-largest and most diverse.",
+            "space": "Although Earth is our home, it's just a tiny part of the vast universe. Space exploration has taught us about the planets, stars, and galaxies beyond our world.",
+            "oceans and seas": "Oceans cover about 71% of Earth's surface. They regulate the climate, support diverse ecosystems, and are essential for human survival."
+        };
+
+        function addMessage(message, sender) {
+            const msgElement = document.createElement('p');
+            msgElement.className = sender;
+            msgElement.textContent = message;
+            chatBox.appendChild(msgElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function getAIResponse(userMessage) {
+            const lowerCaseMessage = userMessage.toLowerCase();
+            for (const topic in earthKnowledge) {
+                if (lowerCaseMessage.includes(topic)) {
+                    return earthKnowledge[topic];
+                }
+            }
+            return "Hmm, it seems your query is not in my vast database of Earthly knowledge. Perhaps you'd like to ask about beans, or clarify your topic?";
+        }
+
+        sendButton.addEventListener('click', () => {
+            const userMessage = userInput.value.trim();
+            if (userMessage) {
+                addMessage(`You: ${userMessage}`, 'user');
+                const aiResponse = getAIResponse(userMessage);
+                setTimeout(() => {
+                    addMessage(`Bean AI: ${aiResponse}`, 'ai');
+                }, 500); // Simulate typing delay
+                userInput.value = '';
+            }
+        });
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+    </script>
+</body>
+</html>

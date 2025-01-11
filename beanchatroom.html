@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bean Chatroom</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        #chat-container {
+            width: 80%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        #messages {
+            height: 300px;
+            overflow-y: scroll;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding: 10px;
+            text-align: left;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        #messages p {
+            margin: 0;
+            padding: 5px 0;
+        }
+        #message-input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        #send-btn {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #send-btn:hover {
+            background-color: #0056b3;
+        }
+        #home-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        #home-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to the Bean Chatroom!</h1>
+    <div id="chat-container">
+        <div id="messages"></div>
+        <textarea id="message-input" placeholder="Type your message here..."></textarea>
+        <button id="send-btn">Send</button>
+    </div>
+
+    <a href="Beanstart.html" id="home-button">Back to Beanstart</a>
+
+    <script>
+        // Store the messages in an array
+        let messages = [];
+
+        // Function to update the messages display
+        function updateMessages() {
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML = ''; // Clear the current messages
+            messages.forEach((message, index) => {
+                const messageElement = document.createElement('p');
+                messageElement.textContent = message;
+                messagesDiv.appendChild(messageElement);
+            });
+            // Scroll to the bottom of the chat
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Function to handle the sending of messages
+        function sendMessage() {
+            const inputElement = document.getElementById('message-input');
+            const message = inputElement.value.trim();
+            if (message !== '') {
+                // Add the message to the messages array
+                messages.push(message);
+                // Update the messages display
+                updateMessages();
+                // Clear the input field
+                inputElement.value = '';
+            }
+        }
+
+        // Add event listener to the send button
+        document.getElementById('send-btn').addEventListener('click', sendMessage);
+
+        // Allow pressing 'Enter' to send a message
+        document.getElementById('message-input').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Update messages on page load (in case there's a refresh)
+        updateMessages();
+    </script>
+</body>
+</html>
