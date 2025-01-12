@@ -3,123 +3,138 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chatroom</title>
+  <title>Simple Chat</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      background-color: #f5f5f5;
       margin: 0;
       padding: 0;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
     }
-    header {
-      background-color: #007bff;
-      color: #fff;
-      padding: 10px 20px;
-      text-align: center;
-    }
-    .chat-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      margin: 20px auto;
-      width: 90%;
+    .container {
+      width: 80%;
+      margin: 0 auto;
       max-width: 600px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    .chat-header {
-      padding: 10px 20px;
-      border-bottom: 1px solid #ccc;
+    .chat-box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
     .chat-display {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      border-bottom: 1px solid #ccc;
+      margin-bottom: 20px;
+      height: 300px;
+      overflow-y: scroll;
     }
     .chat-message {
-      margin-bottom: 10px;
+      background-color: #e1e1e1;
       padding: 10px;
-      background-color: #e0e0e0;
       border-radius: 5px;
-      word-wrap: break-word;
+      margin-bottom: 10px;
+    }
+    .chat-message span {
+      font-weight: bold;
     }
     .chat-input {
       display: flex;
-      padding: 10px;
-      border-top: 1px solid #ccc;
+      justify-content: space-between;
+      align-items: center;
     }
     .chat-input input {
-      flex-grow: 1;
+      width: 80%;
       padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
       border-radius: 5px;
-      margin-right: 10px;
     }
     .chat-input button {
-      padding: 10px 20px;
-      font-size: 16px;
-      color: #fff;
-      background-color: #007bff;
+      padding: 10px 15px;
       border: none;
+      background-color: #007bff;
+      color: white;
       border-radius: 5px;
       cursor: pointer;
-    }
-    .chat-input button:hover {
-      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
-  <header>
-    Welcome to the Chatroom
-  </header>
-  <div class="chat-container">
-    <div class="chat-header" id="usernameDisplay"></div>
-    <div class="chat-display" id="chatDisplay">
-      <!-- Chat messages will appear here -->
-    </div>
-    <div class="chat-input">
-      <input type="text" id="messageInput" placeholder="Type a message..." />
-      <button id="sendButton">Send</button>
+
+  <div class="container">
+    <div class="chat-box">
+      <div class="chat-display" id="chatDisplay"></div>
+      <div class="chat-input">
+        <input type="text" id="messageInput" placeholder="Type a message..." />
+        <button id="sendButton">Send</button>
+      </div>
     </div>
   </div>
 
   <script>
-    // Get the username from the URL
-    const params = new URLSearchParams(window.location.search);
-    const username = params.get('username');
+    // Get the username from the user
+    const username = prompt("Enter your username:") || "Anonymous";
 
-    if (!username) {
-      // Redirect back to the login page if no username is provided
-      window.location.href = 'Login-Signup.html';
-    }
+    // DOM elements
+    const chatDisplay = document.getElementById("chatDisplay");
+    const messageInput = document.getElementById("messageInput");
+    const sendButton = document.getElementById("sendButton");
 
-    // Display the username
-    const usernameDisplay = document.getElementById('usernameDisplay');
-    usernameDisplay.textContent = `Logged in as: ${username}`;
+    // Function to display the messages
+    const displayMessages = (messages) => {
+      chatDisplay.innerHTML = ''; // Clear the current messages
 
-    const chatDisplay = document.getElementById('chatDisplay');
-    const messageInput = document.getElementById('messageInput');
-    const sendButton = document.getElementById('sendButton');
+      messages.forEach((msg) => {
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("chat-message");
+        messageElement.innerHTML = `<span>${msg.username}:</span> ${msg.message}`;
+        chatDisplay.appendChild(messageElement);
+      });
 
-    // Function to add a new message
-    sendButton.addEventListener('click', () => {
+      // Scroll to the bottom of the chat window
+      chatDisplay.scrollTop = chatDisplay.scrollHeight;
+    };
+
+    // Function to load messages from the server
+    const loadMessages = async () => {
+      const response = await fetch('/messages');
+      const messages = await response.json();
+      displayMessages(messages);
+    };
+
+    // Polling every 2 seconds to get new messages
+    setInterval(loadMessages, 2000);
+
+    // Send a new message
+    const sendMessage = async () => {
       const messageText = messageInput.value.trim();
       if (messageText) {
-        const newMessage = document.createElement('div');
-        newMessage.className = 'chat-message';
-        newMessage.textContent = `${username}: ${messageText}`;
-        chatDisplay.appendChild(newMessage);
-        messageInput.value = '';
-        chatDisplay.scrollTop = chatDisplay.scrollHeight;
+        const messageData = { username, message: messageText };
+
+        // Send the message to the server
+        await fetch('/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(messageData),
+        });
+
+        messageInput.value = '';  // Clear the input field
+        loadMessages();  // Reload messages to display the new one
+      }
+    };
+
+    // Send message on button click
+    sendButton.addEventListener('click', sendMessage);
+
+    // Allow sending message on Enter key press
+    messageInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage();
       }
     });
+
+    // Initial message load
+    loadMessages();
   </script>
 </body>
 </html>
