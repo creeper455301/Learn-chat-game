@@ -36,6 +36,18 @@
       background-color: #e0e0e0;
       border-radius: 5px;
       word-wrap: break-word;
+      position: relative;
+    }
+    .chat-message span {
+      font-weight: bold;
+    }
+    .chat-message .crown {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 20px;
+      color: gold;
     }
     .chat-input {
       display: flex;
@@ -80,4 +92,55 @@
     const messageInput = document.getElementById('messageInput');
     const sendButton = document.getElementById('sendButton');
 
-    // Function to add a
+    // List of messages
+    let messages = [];
+
+    // Function to add a message to the display
+    function displayMessages() {
+      chatDisplay.innerHTML = ''; // Clear previous messages
+      messages.forEach(msg => {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('chat-message');
+        
+        // Check if the user is "CreeperDev" and add a crown
+        if (msg.username === 'CreeperDev') {
+          messageElement.innerHTML = `
+            <div class="crown">👑</div>
+            <span>${msg.username}:</span> ${msg.message}
+          `;
+        } else {
+          messageElement.innerHTML = `
+            <span>${msg.username}:</span> ${msg.message}
+          `;
+        }
+        chatDisplay.appendChild(messageElement);
+      });
+
+      // Scroll to the bottom of the chat
+      chatDisplay.scrollTop = chatDisplay.scrollHeight;
+    }
+
+    // Function to send a message
+    function sendMessage() {
+      const messageText = messageInput.value.trim();
+      if (messageText) {
+        const username = prompt('Enter your username:') || 'Anonymous'; // Prompt for username
+        messages.push({ username, message: messageText }); // Add message to the array
+        messageInput.value = ''; // Clear the input field
+        displayMessages(); // Update chat display
+      }
+    }
+
+    // Event listener for the send button
+    sendButton.addEventListener('click', sendMessage);
+
+    // Event listener for pressing 'Enter' to send the message
+    messageInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && messageInput.value.trim()) {
+        sendMessage();
+      }
+    });
+
+  </script>
+</body>
+</html>
