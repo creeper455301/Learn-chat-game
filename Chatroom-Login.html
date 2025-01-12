@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login or Create Account</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .form-container {
+      width: 100%;
+      max-width: 400px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .form-container h1 {
+      margin-bottom: 20px;
+    }
+    .form-container input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .form-container button {
+      width: 100%;
+      padding: 10px;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px 0;
+    }
+    .form-container button:hover {
+      background-color: #0056b3;
+    }
+    .form-container .toggle {
+      background: none;
+      color: #007bff;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .form-container .toggle:hover {
+      color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container" id="formContainer">
+    <h1 id="formTitle">Login</h1>
+    <form id="authForm">
+      <input type="text" id="username" placeholder="Username" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit" id="submitButton">Log In</button>
+    </form>
+    <button class="toggle" id="toggleForm">
+      Don't have an account? Create one
+    </button>
+  </div>
+
+  <script>
+    const formTitle = document.getElementById('formTitle');
+    const submitButton = document.getElementById('submitButton');
+    const toggleForm = document.getElementById('toggleForm');
+    const authForm = document.getElementById('authForm');
+
+    let isLogin = true;
+
+    // Toggle between Login and Signup
+    toggleForm.addEventListener('click', () => {
+      isLogin = !isLogin;
+      formTitle.textContent = isLogin ? 'Login' : 'Create Account';
+      submitButton.textContent = isLogin ? 'Log In' : 'Sign Up';
+      toggleForm.textContent = isLogin
+        ? "Don't have an account? Create one"
+        : 'Already have an account? Log in';
+    });
+
+    // Handle form submission
+    authForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+
+      if (username) {
+        // Redirect to the chatroom with the username as a URL parameter
+        console.log(`Redirecting to Chatroom-Main.html with username: ${username}`);
+        window.location.href = `Chatroom-Main.html?username=${encodeURIComponent(username)}`;
+      } else {
+        alert('Please enter a valid username.');
+      }
+    });
+  </script>
+</body>
+</html>
